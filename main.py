@@ -19,5 +19,7 @@ while 1:
             print(c.xyxy[0])
 
             pyautogui.click(x=(int(c.xyxy[0][0])+int(c.xyxy[0][2]))//2, y=(int(c.xyxy[0][1])+int(c.xyxy[0][3]))//2)
+            break
+            
     os.remove('13yolo.jpg')
     sleep(0.1)
