@@ -19,7 +19,7 @@ while 1:
     screenshot = ImageGrab.grab()
     screenshot.save('13yolo.jpg')
     sleep(0.01)
-    results = model.predict('D:\\farm_skin\\13yolo.jpg', show = False, save=True, imgsz=(1440, 900), conf=0.4, line_thickness = 1)
+    results = model.predict('13yolo.jpg', show = False, save=True, imgsz=(1440, 900), conf=0.4, line_thickness = 1)
     api.push_data(results)
     os.remove('13yolo.jpg')
     sleep(0.1)

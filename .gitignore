@@ -1,2 +1,4 @@
 env
 yolo*
+__pycache__
+train*
