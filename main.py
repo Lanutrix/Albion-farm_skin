@@ -3,23 +3,23 @@ from PIL import ImageGrab
 from datetime import datetime
 from ultralytics import YOLO
 from time import sleep
-import pyautogui
+from time import sleep
+import predict_img
 
-model = YOLO('best1.pt') 
+model = YOLO('pyst.pt') 
+api = predict_img.Bot_API()
 
+print(model.names)
+sleep(2)
+
+api.START()
 n = 0
+
 while 1:
     screenshot = ImageGrab.grab()
     screenshot.save('13yolo.jpg')
     sleep(0.01)
-    results = model.predict('D:\\sserver-part\\13yolo.jpg', show = False, save=True, imgsz=(1282,759), conf=0.51, line_thickness = 1)
-    pri = []
-    for r in results: #вывод всех распознанных классов
-        for c in r.boxes:
-            print(c.xyxy[0])
-
-            pyautogui.click(x=(int(c.xyxy[0][0])+int(c.xyxy[0][2]))//2, y=(int(c.xyxy[0][1])+int(c.xyxy[0][3]))//2)
-            break
-            
+    results = model.predict('D:\\farm_skin\\13yolo.jpg', show = False, save=True, imgsz=(1440, 900), conf=0.4, line_thickness = 1)
+    api.push_data(results)
     os.remove('13yolo.jpg')
     sleep(0.1)

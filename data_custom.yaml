@@ -1,7 +1,0 @@
-train: D:\server-part\dataset\train\images
-val: D:\server-part\dataset\val\images
-
-
-nc: 4
-
-names: [snake','dsnake','frog','dfrog']
