@@ -38,12 +38,14 @@ class Bot_API:
         print('START')
         thread = threading.Thread(target=self.movement, args=())
         thread.start()
-        thread = threading.Thread(target=self.space_click, args=())
-        thread.start()
     
     def vector_move(self):
         self.dviz += [pag.position()]
         print(self.dviz)
+
+    def clear_dviz(self):
+        print('CLEAR')
+        self.dviz = []
 
     def push_data(self, results):
         mobs = [[], []]
@@ -83,19 +85,13 @@ class Bot_API:
         while 1:
             if self.dviz:
                 for i in self.dviz:
-                    for j in range(3):
-                        if self.mode == 0:
-                            pag.click(i[0], i[1])
-                            sleep(1.6)
-                        else:
-                            sleep(2)
+                    if self.mode == 0:
+                        pag.click(i[0], i[1])
+                        sleep(1.6)
+                    else:
+                        sleep(2)
                 else:
                     sleep(1)
-    def space_click(self):
-            while 1:
-                pag.press('space')
-                sleep(1)
-
 
     def looting(self, xy):
         self.mode = 2
@@ -106,12 +102,19 @@ class Bot_API:
         self.mode = 1
         pag.click(xy[0], xy[1])
         sleep(1)
+        pag.press('space')
         pag.press('r')
+        pag.press('space')
         sleep(1.5)
+        pag.press('space')
         pag.press('e')
+        pag.press('space')
         sleep(1.5)
+        pag.press('space')
         pag.press('q')
+        pag.press('space')
         sleep(1)
+        pag.press('space')
 
 
 # bot = Bot_API().START()

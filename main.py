@@ -6,6 +6,7 @@ from time import sleep
 from time import sleep
 import predict_img
 import keyboard
+from sys import exit as qx
     
 def main():
     api.START()
@@ -22,8 +23,10 @@ model = YOLO('pyst.pt')
 api = predict_img.Bot_API()
 keyboard.add_hotkey("alt+s", lambda: api.vector_move())   
 keyboard.add_hotkey("alt+p", lambda: main()) 
+keyboard.add_hotkey("alt+c", lambda: api.clear_dviz())
+keyboard.add_hotkey("alt+k", lambda: qx()) 
 print(model.names)
 
-
-while 1:
+ 
+while 1: 
     sleep(100)
