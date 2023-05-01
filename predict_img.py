@@ -10,10 +10,9 @@ scrn    = list(pag.size())
 
 left    = [scrn[0]//2+400, scrn[1]//2]
 right   = [scrn[0]//2-400, scrn[1]//2]
-up      = [scrn[0]//2, scrn[1]//2+350]
-down    = [scrn[0]//2, scrn[1]//2-350]
+up      = [scrn[0]//2, scrn[1]//2+300]
+down    = [scrn[0]//2, scrn[1]//2-300]
 
-dviz = [right, up, left, down]
 
 person  = [scrn[0]//2, scrn[1]//2-50]
 
@@ -29,12 +28,22 @@ class Bot_API:
         mode = 2, это лутальня
         """
         self.skills = [3, 30, 15]
+        self.dviz = []
+        self.starting = 0
 
         print(scrn)
     
     def START(self):
+        self.starting = 1
+        print('START')
         thread = threading.Thread(target=self.movement, args=())
         thread.start()
+        thread = threading.Thread(target=self.space_click, args=())
+        thread.start()
+    
+    def vector_move(self):
+        self.dviz += [pag.position()]
+        print(self.dviz)
 
     def push_data(self, results):
         mobs = [[], []]
@@ -60,31 +69,38 @@ class Bot_API:
                 if distance < min_distance:
                     min_distance = distance
                     nearest_point = mobs[0][point]
-                    flag = not mobs[1][point] in [1, 2, 4, 5]
+                    flag = mobs[1][point] in [1, 2, 4, 5]
             
             if flag:
-                self.fight(nearest_point)
-            else:
                 self.looting(nearest_point)
+            else:
+                self.fight(nearest_point)
         else:
             self.mode = 0
             
 
     def movement(self):
         while 1:
-            for i in dviz:
-                for j in range(3):
-                    if self.mode == 0:
-                        pag.click(i[0], i[1])
-                        sleep(1.6)
-                    else:
-                        sleep(2)
+            if self.dviz:
+                for i in self.dviz:
+                    for j in range(3):
+                        if self.mode == 0:
+                            pag.click(i[0], i[1])
+                            sleep(1.6)
+                        else:
+                            sleep(2)
+                else:
+                    sleep(1)
+    def space_click(self):
+            while 1:
+                pag.press('space')
+                sleep(1)
 
 
     def looting(self, xy):
         self.mode = 2
         pag.click(xy[0], xy[1])
-        sleep(3)
+        sleep(5)
 
     def fight(self, xy):
         self.mode = 1
