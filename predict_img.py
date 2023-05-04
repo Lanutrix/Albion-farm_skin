@@ -18,9 +18,9 @@ person  = [scrn[0]//2, scrn[1]//2-50]
 
 class Bot_API:
     def __init__(self) -> None:
-        self.names = {0: 'bird', 1: 'dbird', 2: 'ddeer',
-                      3: 'deer', 4: 'dolen', 5: 'dpuma',
-                      6: 'olen', 7: 'puma'}
+        self.names = {0: 'antilop', 1: 'birdt3', 2: 'dantilop',
+                      3: 'dbirdt3', 4: 'dbirdt5', 5: 'ddeer',
+                      6: 'deer', 7: 'dpuma'}
         self.mode = 0
         """
         mode = 0, это бег
@@ -71,14 +71,13 @@ class Bot_API:
                 if distance < min_distance:
                     min_distance = distance
                     nearest_point = mobs[0][point]
-                    flag = mobs[1][point] in [1, 2, 4, 5]
+            self.mode = 1   
+            pag.click(nearest_point)
             
-            if flag:
-                self.looting(nearest_point)
-            else:
-                self.fight(nearest_point)
-        else:
+            sleep(10)
             self.mode = 0
+      
+            
             
 
     def movement(self):
