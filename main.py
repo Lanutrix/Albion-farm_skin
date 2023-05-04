@@ -14,7 +14,7 @@ def main():
         screenshot = ImageGrab.grab()
         screenshot.save('13yolo.jpg')
         sleep(0.01)
-        results = model.predict('13yolo.jpg', show = False, save=True, imgsz=(1440, 900), conf=0.35, line_thickness = 1)
+        results = model.predict('13yolo.jpg', show = False, save=True, imgsz=(640, 480), conf=0.65, line_thickness = 1)
         api.push_data(results)
         os.remove('13yolo.jpg') 
         sleep(0.1)
