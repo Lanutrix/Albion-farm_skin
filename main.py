@@ -185,6 +185,17 @@ def qexit():
     running = 0
     print('EXIT')
     qx()
+print('''
+Текущая конфигурация:''')
+print(f'''[+] Точность для определяемого объекта: {config['cnn']}''')
+print(f'''[+] Прожимаемые скилы: {config['skills']}''')
+try:
+    print(f'''[+] Траектория движения: {config['movement']}
+''')
+except:
+    print("[-] Траектория движения: \n")
+
+
 
 bot = Bot_API()
 
