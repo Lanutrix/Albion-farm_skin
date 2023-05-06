@@ -58,13 +58,19 @@ class Bot_API:
                 self.timer[self.use[0][i]] = datetime.now()
 
     def vector_move(self):
-        self.dviz += [pag.position()]
+        xy = pag.position()
+        self.dviz += [[xy[0], xy[1]]]
         print(self.dviz)
 
     def clear_dviz(self):
         print('CLEAR')
         self.dviz = []
 
+    def save_dviz(self):
+        global config
+        print('SAVE CONFIG')
+        config['movement'] = self.dviz
+        open('config.json', 'w').write(json.dumps(config))
 
     def skaning(self):
         if self.fight:
@@ -184,7 +190,8 @@ bot = Bot_API()
 
 
 keyboard.add_hotkey("alt+s", lambda: bot.vector_move())
-keyboard.add_hotkey("alt+c", lambda: bot.clear_dviz())   
+keyboard.add_hotkey("alt+c", lambda: bot.clear_dviz())
+keyboard.add_hotkey("alt+j", lambda: bot.save_dviz())  
 keyboard.add_hotkey("alt+p", lambda: bot.RUN())
 keyboard.add_hotkey("alt+k", lambda: qexit())
 print('APP WAS LOADED')
