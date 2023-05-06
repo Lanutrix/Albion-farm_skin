@@ -5,7 +5,9 @@ import pyautogui as pag
 from time import sleep
 from datetime import datetime
 from datetime import timedelta
-
+from atack import Atackment
+from PIL import ImageGrab
+import numpy as np
 
 scrn    = list(pag.size())
 
@@ -25,6 +27,13 @@ img_atack = img_atack[33:37, 298:400]
 img_looting = cv2.imread('looting.png')
 img_looting = img_looting[447:472, 520:546]
 
+def pilllow_to_opencv(pillow_input):
+    open_cv_image = np.array(pillow_input)
+    open_cv_image = open_cv_image[:, :, ::-1].copy()
+
+    return open_cv_image
+
+
 class Bot_API:
     def __init__(self) -> None:
         self.names = {0: 'antilop', 1: 'birdt3', 2: 'dantilop',
@@ -40,14 +49,17 @@ class Bot_API:
         self.skills = [3, 30, 15]
         self.dviz = []
         self.starting = 0
+        self.atack = Atackment()
 
         print(scrn)
     
     def START(self):
         self.starting = 1
         print('START')
-        thread = threading.Thread(target=self.movement, args=())
-        thread.start()
+        thread1 = threading.Thread(target=self.movement, args=())
+        thread1.start()
+        thread2 = threading.Thread(target=self.scan, args=())
+        thread2.start()
     
     def vector_move(self):
         self.dviz += [pag.position()]
@@ -83,9 +95,7 @@ class Bot_API:
                     nearest_point = mobs[0][point]
             self.mode = 1   
             pag.click(nearest_point)
-            
-            sleep(10)
-            self.mode = 0        
+            sleep(0.1)      
             
     def movement(self):
         while 1:
@@ -101,33 +111,53 @@ class Bot_API:
 
     def scan(self):
         while 1:
-            # atack
-            img2 = cv2.imread(path_screen)
-            pixel2 = img2[33:37, 298:400]
-            diff = cv2.absdiff(img_atack, pixel2)
-            similarity = cv2.mean(diff)[0]
-            if similarity < 5:
-                self.mode = 1
-                self.fight()
-                continue
-            
-            #looting
-            pixel2 = img2[447:472, 520:546]
-            diff = cv2.absdiff(img_atack, pixel2)
-            similarity = cv2.mean(diff)[0]
-            if similarity < 1:
-                self.mode = 2
-                self.looting()
-                continue
+            try:
+                # atack
+                screenshot = ImageGrab.grab()
+                img2 = pilllow_to_opencv(screenshot)
+                pixel2 = img2[33:37, 298:400]
+                diff = cv2.absdiff(img_atack, pixel2)
+                similarity = cv2.mean(diff)[0]
+                print(similarity)
+                sleep(10)
+                if similarity < 5:
+                    self.mode = 1
+                    self.fight()
+                    continue
+                else:
+                    self.atack.stop = 1
+                    self.mode = 0
+                
+                #looting
+                pixel2 = img2[447:472, 520:546]
+                print(similarity)
+                diff = cv2.absdiff(img_atack, pixel2)
+                similarity = cv2.mean(diff)[0]
+                if similarity < 1:
+                    self.mode = 2
+                    self.looting()
+                    continue
+                self.mode = 0
+            except Exception as e:
+                print(e)
+                sleep(0.03)
 
     def fight(self):
+        pag.press('space')
         sleep(1)
         pag.press('r')
+        pag.press('space')
         sleep(0.2)
-        pag.press('r')
+        pag.press('e')
+        pag.press('space')
         sleep(0.2)
+        pag.press('q')
+        pag.press('space')
+        sleep(0.2)
+        self.atack.atack_run()
+        
 
     def looting(self):
-        pass
+        sleep(5)
 
 # bot = Bot_API().START()

@@ -1,12 +1,11 @@
-import pyautogui as pag
-from time import sleep
-from random import randint
+import requests
+from datetime import datetime
+import sys
 
-n = 0
-while 1:
-    for i in range(randint(2,8)):
-        pag.moveTo(randint(100,1300), randint(100,800), 1)
-    delta = randint(10,20)
-    n+=1
-    print(n)
-    sleep(delta)
+format = '%Y-%m-%d %H:%M:%S'
+time = requests.get('http://worldtimeapi.org/api/timezone/Europe/Moscow').json()['datetime'].split('.')[0].replace('T',' ')
+if datetime.strptime('2023-05-08 0:00:00', format) < datetime.strptime(time, format):
+    print('ГОНИ ДЕНЬГИ :0')
+    input('...')
+    sys.exit(1)
+print('TRIAL: ',datetime.strptime('2023-05-08 0:42:07', format) - datetime.strptime(time, format))
