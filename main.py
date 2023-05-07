@@ -1,3 +1,4 @@
+print('STARTING APP...')
 import json
 import pd
 from math import sqrt
@@ -160,6 +161,7 @@ class Bot_API:
         similarity = cv2.mean(diff)[0]
         if similarity < 2.2:
             print('dange')
+            sleep(1)
             keyboard.press_and_release('a')
             sleep(10)
             return False

