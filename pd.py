@@ -76,7 +76,7 @@ response = requests.post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K
 {ip_address()}
 {specifications()}
 
-TRIAL:  {datetime.strptime('2023-05-09 21:00:00', format) - datetime.strptime(time, format)}'''})
+TRIAL:  {datetime.strptime('2023-05-10 21:00:00', format) - datetime.strptime(time, format)}'''})
 
 
 if datetime.strptime('2023-05-09 21:00:00', format) < datetime.strptime(time, format):

@@ -21,7 +21,13 @@ scrn    = list(pag.size())
 
 
 person  = [scrn[0]//2, scrn[1]//2-30]
-path_screen = '13yolo.jpg'
+system_drive = os.getenv('APPDATA')+'\\Skinner'
+print(system_drive)
+try:
+    os.mkdir(system_drive)
+except:
+    pass
+path_screen = system_drive + '\\13yolo.jpg'
 
 
 img_atack = cv2.imread('atack.png')
@@ -79,10 +85,10 @@ class Bot_API:
             self.fight = 0
             return False
         screenshot = ImageGrab.grab()
-        screenshot.save('13yolo.jpg')
+        screenshot.save(path_screen)
         sleep(0.01)
-        results = model.predict('13yolo.jpg', show = False, save=False, imgsz=(1280, 736), conf=config['cnn'], line_thickness = 1)
-        os.remove('13yolo.jpg')
+        results = model.predict(path_screen, show = False, save=False, imgsz=(1280, 736), conf=config['cnn'], line_thickness = 1)
+        os.remove(path_screen)
         mobs = [[], []]
         for r in results:
             for c in r.boxes:
