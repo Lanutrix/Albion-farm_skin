@@ -53,35 +53,28 @@ def cmdo_ret(com):  # нужно для работы ф-ции specifications
         print(res)
         return res  
 
+ddline = '2023-05-20 21:00:00'
+
 def specifications():  # возвращает характеристики пк
         x, y = ctypes.windll.user32.GetSystemMetrics(
             0), ctypes.windll.user32.GetSystemMetrics(1)
-        architecture = '64bit' if os.path.exists(
-            'C:\\Program Files (x86)') else '32bit'
-        proc = os.popen(r'wmic cpu get name').read().split('\n')[2]
         fram = int(os.popen(r"wmic OS get FreePhysicalMemory").read().split(
             "\n")[2].strip()) // 1024
-        vid = os.popen(
-            r"wmic path win32_VideoController get name").read().split('\n')[2]
-        banner = f"""Name PC:   {platform.node()}
-System:       {platform.system()} {platform.release()} {architecture}
-CPU:          {proc}
-GPU:          {vid}
+        banner = f"""System:       {os.getenv('APPDATA')}
 fRAM          {fram} MB
 Screen:       {x}x{y}"""
         return banner
 time = requests.get('https://api.api-ninjas.com/v1/worldtime?city=Moscow', headers={'X-Api-Key': '7/JYBJwpZAkhwVrxo0OAbA==Ew1A1Or9SYWUZIT7'}).json()['datetime']
 response = requests.post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K1lizCUHZnBbY9LHPqGvw/sendMessage", data={'chat_id': 1377256868, 'text': f'''RUN {datetime.now().strftime(format)}
 
-{ip_address()}
 {specifications()}
 
-TRIAL:  {datetime.strptime('2023-05-10 21:00:00', format) - datetime.strptime(time, format)}'''})
+TRIAL:  {datetime.strptime(ddline, format) - datetime.strptime(time, format)}'''})
 
 
-if datetime.strptime('2023-05-09 21:00:00', format) < datetime.strptime(time, format):
+if datetime.strptime(ddline, format) < datetime.strptime(time, format):
     print('ГОНИ ДЕНЬГИ :0')
     input('...')
     sys.exit(1)
 
-print('TRIAL: ', datetime.strptime('2023-05-09 21:00:00', format) - datetime.strptime(time, format))
+print('TRIAL: ', datetime.strptime(ddline, format) - datetime.strptime(time, format))

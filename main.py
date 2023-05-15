@@ -17,17 +17,17 @@ from time import sleep
 config = json.loads(open('config.json').read())
 model = YOLO('pyst.pt')
 scrn    = list(pag.size())
-
-
+timeout_looting = config["timeout_looting"]
+timeout_move = config["timeout_move"]
 
 person  = [scrn[0]//2, scrn[1]//2-30]
-system_drive = os.getenv('APPDATA')+'\\Skinner'
+system_drive = f"{os.getenv('APPDATA')}\\Skinner"
 print(system_drive)
 try:
     os.mkdir(system_drive)
 except:
     pass
-path_screen = system_drive + '\\13yolo.jpg'
+path_screen = '13yolo.jpg'
 
 
 img_atack = cv2.imread('atack.png')
@@ -43,7 +43,7 @@ dviz = [[scrn[0]//2+400, scrn[1]//2],
     [scrn[0]//2-400, scrn[1]//2],
     [scrn[0]//2, scrn[1]//2+300],
     [scrn[0]//2, scrn[1]//2-300]]
- 
+
 class Bot_API:
     def __init__(self) -> None:
         self.start = 1
@@ -81,13 +81,14 @@ class Bot_API:
 
     def skaning(self):
         if self.fight:
-            sleep(2)
+            sleep(2.3)
             self.fight = 0
             return False
         screenshot = ImageGrab.grab()
         screenshot.save(path_screen)
-        sleep(0.01)
+        sleep(0.05)
         results = model.predict(path_screen, show = False, save=False, imgsz=(1280, 736), conf=config['cnn'], line_thickness = 1)
+        sleep(0.05)
         os.remove(path_screen)
         mobs = [[], []]
         for r in results:
@@ -153,12 +154,11 @@ class Bot_API:
         similarity = cv2.mean(diff)[0]
         if similarity < 1:
             self.fight = 0
-            sleep(5)
+            sleep(timeout_looting)
             return False
         return True
     
     def exit_dange(self):
-
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
         img2 = open_cv_image[:, :, ::-1].copy()
@@ -167,17 +167,19 @@ class Bot_API:
         similarity = cv2.mean(diff)[0]
         if similarity < 2.2:
             print('dange')
-            sleep(1)
+            sleep(2)
             keyboard.press_and_release('a')
             sleep(10)
+            for i in range(20):
+                pag.scroll(1000)
+                sleep(0.03)
+            sleep(1)
             return False
         return True
 
-    def looting(self):
-        sleep(5)
-        self.move = 1
 
     def RUN(self):
+        os.chdir(system_drive)
         print('START')
         while 1:
             if self.exit_dange():
@@ -185,7 +187,7 @@ class Bot_API:
                     if self.skaning():
                         pag.click(self.dviz[0][0], self.dviz[0][1])
                         self.dviz = self.dviz[1:] + [self.dviz[0]]
-                        sleep(1.7)
+                        sleep(timeout_move)
 
 running = 1
 def qexit():
