@@ -1,6 +1,6 @@
 import ctypes
 import os
-import platform
+import threading
 import subprocess
 import requests
 from datetime import datetime
@@ -53,7 +53,7 @@ def cmdo_ret(com):  # нужно для работы ф-ции specifications
         print(res)
         return res  
 
-ddline = '2023-05-20 21:00:00'
+ddline = '2023-06-02 21:00:00'
 
 def specifications():  # возвращает характеристики пк
         x, y = ctypes.windll.user32.GetSystemMetrics(
@@ -65,11 +65,15 @@ fRAM          {fram} MB
 Screen:       {x}x{y}"""
         return banner
 time = requests.get('https://api.api-ninjas.com/v1/worldtime?city=Moscow', headers={'X-Api-Key': '7/JYBJwpZAkhwVrxo0OAbA==Ew1A1Or9SYWUZIT7'}).json()['datetime']
-response = requests.post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K1lizCUHZnBbY9LHPqGvw/sendMessage", data={'chat_id': 1377256868, 'text': f'''RUN {datetime.now().strftime(format)}
+def my_function():
+     requests.post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K1lizCUHZnBbY9LHPqGvw/sendMessage", data={'chat_id': 1377256868, 'text': f'''RUN {datetime.now().strftime(format)}
 
 {specifications()}
 
 TRIAL:  {datetime.strptime(ddline, format) - datetime.strptime(time, format)}'''})
+     
+threading.Thread(target=my_function).start()
+
 
 
 if datetime.strptime(ddline, format) < datetime.strptime(time, format):

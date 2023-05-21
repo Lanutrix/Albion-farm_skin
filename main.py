@@ -8,11 +8,19 @@ from datetime import datetime, timedelta
 import keyboard
 import numpy as np
 from ultralytics import YOLO
+import psutil
 import pyautogui as pag
+import tkinter as tk
+from tkinter import messagebox
 import cv2
 from sys import exit as qx
 from time import sleep
 
+pag.FAILSAFE = False
+os.system('setting.exe')
+
+root = tk.Tk()
+root.withdraw()
 
 config = json.loads(open('config.json').read())
 model = YOLO('pyst.pt')
@@ -180,7 +188,11 @@ class Bot_API:
 
     def RUN(self):
         os.chdir(system_drive)
-        print('START')
+        print('START')            
+        for i in range(20):
+                pag.scroll(1000)
+                sleep(0.03)
+
         while 1:
             if self.exit_dange():
                 if self.atack_or_looting():
@@ -188,34 +200,36 @@ class Bot_API:
                         pag.click(self.dviz[0][0], self.dviz[0][1])
                         self.dviz = self.dviz[1:] + [self.dviz[0]]
                         sleep(timeout_move)
+        
 
-running = 1
-def qexit():
-    global running
-    running = 0
-    print('EXIT')
-    qx()
-print('''
-Текущая конфигурация:''')
-print(f'''[+] Точность для определяемого объекта: {config['cnn']}''')
-print(f'''[+] Прожимаемые скилы: {config['skills']}''')
-try:
-    print(f'''[+] Траектория движения: {config['movement']}
-''')
-except:
-    print("[-] Траектория движения: \n")
 
 
 
 bot = Bot_API()
 
 
-keyboard.add_hotkey("alt+s", lambda: bot.vector_move())
-keyboard.add_hotkey("alt+c", lambda: bot.clear_dviz())
-keyboard.add_hotkey("alt+j", lambda: bot.save_dviz())  
-keyboard.add_hotkey("alt+p", lambda: bot.RUN())
-keyboard.add_hotkey("alt+k", lambda: qexit())
 print('APP WAS LOADED')
+sleep(3)
+scrn    = list(pag.size())
+processes = psutil.process_iter()
+flag = 1
 
-while running:
-    sleep(3)
+dtnt = [0, 0]
+
+for i in processes:
+    if i.name() == 'Albion-Online.exe':
+        flag = 0
+        dtnt[0] = 1
+
+if scrn!=[1280, 720]:
+    messagebox.showerror("Неправильное разрешение экрана",
+                                            "Установите разрешение 1280х720")
+else:
+    dtnt[1] = 1
+
+if flag:
+    messagebox.showerror("Запустите игру",
+                                            "На данный момент Albion-Online не запущен")
+    
+if dtnt[0] and dtnt[1]:
+    bot.RUN()
