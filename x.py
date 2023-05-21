@@ -1,30 +1,25 @@
-import psutil
+from PIL import ImageGrab
+from datetime import datetime
+import numpy as np
 import pyautogui as pag
-import tkinter as tk
-from tkinter import messagebox
-root = tk.Tk()
-root.withdraw()
+import cv2
+from time import sleep
 
-scrn    = list(pag.size())
-processes = psutil.process_iter()
-flag = 1
 
-dtnt = [0, 0]
+path = r'C:\Users\Dmitry\Documents\Lightshot'
+img_atack = cv2.imread('atack.png')
+img_atack = img_atack[68:71, 283:295]
 
-for i in processes:
-    if i.name() == 'Albion-Online.exe':
-        flag = 0
-        dtnt[0] = 1
+img_looting = cv2.imread('looting.png')
+img_looting = img_looting[447:472, 520:546]
 
-if scrn!=[1280, 720]:
-    messagebox.showerror("Неправильное разрешение экрана",
-                                             "Установите разрешение 1280х720")
-else:
-    dtnt[1] = 1
-
-if flag:
-    messagebox.showerror("Запустите игру",
-                                             "На данный момент Albion-Online не запущен")
-    
-if dtnt[0] and dtnt[1]:
-    print(';lbfd;kmlfd')
+img_dange = cv2.imread('dange.png')
+img_dange = img_dange[578:635, 1118:1165]
+for i in range(1, 46):
+        img2 = cv2.imread(path+f'\\Screenshot_{i}.png')
+        pixel2 = img2[68:71, 283:295]
+        diff = cv2.absdiff(img_atack, pixel2)
+        similarity = cv2.mean(diff)[0]
+        
+        print(path+f'\\Screenshot_{i}.png'
+              , similarity)

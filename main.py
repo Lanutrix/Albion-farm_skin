@@ -39,7 +39,7 @@ path_screen = '13yolo.jpg'
 
 
 img_atack = cv2.imread('atack.png')
-img_atack = img_atack[36:40, 298:400]
+img_atack = img_atack[68:71, 283:295]
 
 img_looting = cv2.imread('looting.png')
 img_looting = img_looting[447:472, 520:546]
@@ -122,7 +122,7 @@ class Bot_API:
             screenshot = ImageGrab.grab()
             open_cv_image = np.array(screenshot)
             img2 = open_cv_image[:, :, ::-1].copy()
-            pixel2 = img2[36:40, 298:400]
+            pixel2 = img2[68:71, 283:295]
             diff = cv2.absdiff(img_atack, pixel2)
             similarity = cv2.mean(diff)[0]
             if similarity < 2.4:
@@ -145,7 +145,7 @@ class Bot_API:
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
         img2 = open_cv_image[:, :, ::-1].copy()
-        pixel2 = img2[36:40, 298:400]
+        pixel2 = img2[68:71, 283:295]
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 1:
