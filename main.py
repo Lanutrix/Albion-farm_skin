@@ -22,11 +22,11 @@ os.system('setting.exe')
 root = tk.Tk()
 root.withdraw()
 
-config = json.loads(open('config.json').read())
-model = YOLO('pyst.pt')
-scrn    = list(pag.size())
+config          = json.loads(open('config.json').read())
+model           = YOLO('pyst.pt')
+scrn            = list(pag.size())
 timeout_looting = config["timeout_looting"]
-timeout_move = config["timeout_move"]
+timeout_move    = config["timeout_move"]
 
 person  = [scrn[0]//2, scrn[1]//2-30]
 system_drive = f"{os.getenv('APPDATA')}\\Skinner"
@@ -38,19 +38,19 @@ except:
 path_screen = '13yolo.jpg'
 
 
-img_atack = cv2.imread('atack.png')
-img_atack = img_atack[68:71, 283:295]
+img_atack   = cv2.imread('atack.png')
+img_atack   = img_atack[68:71, 283:295]
 
 img_looting = cv2.imread('looting.png')
 img_looting = img_looting[447:472, 520:546]
 
-img_dange = cv2.imread('dange.png')
-img_dange = img_dange[578:635, 1118:1165]
+img_dange   = cv2.imread('dange.png')
+img_dange   = img_dange[578:635, 1118:1165]
 
 dviz = [[scrn[0]//2+400, scrn[1]//2],
-    [scrn[0]//2-400, scrn[1]//2],
-    [scrn[0]//2, scrn[1]//2+300],
-    [scrn[0]//2, scrn[1]//2-300]]
+        [scrn[0]//2-400, scrn[1]//2],
+        [scrn[0]//2, scrn[1]//2+300],
+        [scrn[0]//2, scrn[1]//2-300]]
 
 class Bot_API:
     def __init__(self) -> None:
