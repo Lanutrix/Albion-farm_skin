@@ -66,7 +66,11 @@ def compare_chunks(image):
             chunk = image[y*chunk_size:(y+1)*chunk_size, x*chunk_size:(x+1)*chunk_size]
             diff = cv2.absdiff(template, chunk)
             similarity = cv2.mean(diff)[0]
-            maping[y][x] = int(similarity)
+
+            diff2 = cv2.absdiff(template, chunk)
+            similarity2 = cv2.mean(diff2)[0]
+
+            maping[y][x] = int(min(similarity,similarity2))#similarity)#
 
     return maping
 
@@ -104,7 +108,7 @@ def print_arr(arr):
         for k in i:
             y += 1
             
-            if (x==4) and (y==4):
+            if (x==8) and (y==8):
                 print("\033[32m", end=' ')
                 print(int(k), end=' ')
                 # print(0 if k>kof else 1, end=' ')
@@ -126,8 +130,8 @@ def print_arr(arr):
 #  [93,155,205],
 #  [229,165,119],
 #  [152,102,77]]
-for i in range(58, 59):
-    image = cv2.imread(f'map/Screenshot_{i}.png')[558:656, 1090:1188]
+for i in range(65, 66):
+    image = cv2.imread(f'map/Screenshot_{i}.png')[554:660, 1086:1191]
     
     result_image = cv2.blur(image, (3,3))
     # result_image = reduce_colors(result_image, 16)#
@@ -135,11 +139,22 @@ for i in range(58, 59):
     # cv2.imshow('Reduced Colors', result_image)
     # cv2.waitKey(0)
     # cv2.destroyAllWindows()
-    result = compare_chunks(image)
-    print_arr(result)
-    arr = sum_2x2_blocks(result)
+    result = compare_chunks(result_image)
+
+    s1 = sum([result[i][7] for i in range(len(result)//2)])
+    s12 = sum([result[i-1][-i] for i in range(1, len(result)//2+1)])
+    s2 = sum([result[-i][7] for i in range(1, len(result)//2+1)])
+    s23 = sum([result[-i][-i] for i in range(1, len(result)//2+1)])
+    s3 = sum([result[7][i] for i in range(len(result)//2)])
+    s34 = sum([result[-i][i-1] for i in range(1, len(result)//2+1)])
+    s4 = sum([result[7][-i] for i in range(1, len(result)//2+1)])
+    s41 = sum([result[i][i] for i in range(len(result)//2)])
+    
+    
+   
+    # arr = sum_2x2_blocks(result)
     print()
-    print_arr(arr)
+    print_arr(result)
     print(result[6][6])
 
 # Загрузка изображения
