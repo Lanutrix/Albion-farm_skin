@@ -142,10 +142,7 @@ class Bot_API:
         
 
     def atack_or_looting(self):
-        screenshot = ImageGrab.grab()
-        open_cv_image = np.array(screenshot)
-        img2 = open_cv_image[:, :, ::-1].copy()
-        pixel2 = img2[68:71, 283:295]
+        pixel2 = self.img2[68:71, 283:295]
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 1:
@@ -157,7 +154,7 @@ class Bot_API:
             self.fight = 1
             sleep(1.6)
             return False
-        pixel2 = img2[447:472, 520:546]
+        pixel2 = self.img2[447:472, 520:546]
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 1:
@@ -169,8 +166,8 @@ class Bot_API:
     def exit_dange(self):
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
-        img2 = open_cv_image[:, :, ::-1].copy()
-        pixel2 = img2[578:635, 1118:1165]
+        self.img2 = open_cv_image[:, :, ::-1].copy()
+        pixel2 = self.img2[578:635, 1118:1165]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 2.2:
@@ -178,28 +175,56 @@ class Bot_API:
             sleep(2)
             keyboard.press_and_release('a')
             sleep(10)
-            for i in range(20):
-                pag.scroll(1000)
-                sleep(0.03)
+            self.scrolling()
             sleep(1)
             return False
         return True
+    
+    def check_map(self):
+        if datetime.now() - self.last_scan > timedelta(3):
+            maper = self.img2[554:660, 1086:1191]
+            diff = cv2.absdiff(maper, self.map)
+            similarity = cv2.mean(diff)[0]
+            if int(similarity) == 0:
+                self.map = maper
+                self.reverse_dviz()
+                self.last_scan = datetime.now()
+                return False
+        return True
+
+    def reverse_dviz(self):
+        pass
+
+    def scrolling(self):
+        for i in range(20):
+                pag.scroll(1000)
+                sleep(0.03)
 
 
     def RUN(self):
         os.chdir(system_drive)
         print('START')            
-        for i in range(20):
-                pag.scroll(1000)
-                sleep(0.03)
+        self.scrolling()
+
+        pag.moveTo(1150,600)
+        self.scrolling()
+
+        screenshot = ImageGrab.grab()
+        open_cv_image = np.array(screenshot)
+        img2 = open_cv_image[:, :, ::-1].copy()
+
+        self.map = img2[554:660, 1086:1191]
+        self.last_scan = datetime.now()
 
         while 1:
             if self.exit_dange():
-                if self.atack_or_looting():
-                    if self.skaning():
-                        pag.click(self.dviz[0][0], self.dviz[0][1])
-                        self.dviz = self.dviz[1:] + [self.dviz[0]]
-                        sleep(timeout_move)
+                if self.check_map():
+                    if self.atack_or_looting():
+                        if self.skaning():
+                            pag.click(self.dviz[0][0], self.dviz[0][1])
+                            self.dviz = self.dviz[1:] + [self.dviz[0]]
+                            pag.press('f')
+                            sleep(timeout_move)
         
 
 

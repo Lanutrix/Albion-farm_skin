@@ -154,7 +154,7 @@ for i in range(65, 66):
    
     # arr = sum_2x2_blocks(result)
     print()
-    print_arr(result)
+    print(result)
     print(result[6][6])
 
 # Загрузка изображения
