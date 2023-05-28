@@ -39,17 +39,21 @@ class Bot_APIii:
         print(self.dviz)
 
     def clear_dviz(self):
-        print('CLEAR')
         self.dviz = []
 
     def save_dviz(self):
         global config
-        print('SAVE CONFIG')
         config['movement'] = self.dviz
         open('config.json', 'w').write(json.dumps(config))
 
     def qexit(self):
+        self.clear_dviz()
+        self.vector_move()
         self.save_dviz()
+        global running
+        running = 0
+    
+    def qexitss(self):
         global running
         running = 0
  
@@ -68,8 +72,7 @@ except:
 
 bot = Bot_APIii()
 
-keyboard.add_hotkey("alt+s", lambda: bot.vector_move())
-keyboard.add_hotkey("alt+c", lambda: bot.clear_dviz()) 
+keyboard.add_hotkey("alt+s", lambda: bot.qexitss())
 keyboard.add_hotkey("alt+p", lambda: bot.qexit())
 
 while running:

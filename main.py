@@ -1,6 +1,6 @@
 print('STARTING APP...')
 import json
-import pd
+# import pd
 from math import sqrt
 import os
 from PIL import ImageGrab
@@ -193,8 +193,17 @@ class Bot_API:
         return True
 
     def reverse_dviz(self):
-        pass
-
+        a = self.dviz
+        if a[0]<360 and a[1]<640:
+            a[1] = 720-a[1]
+        elif a[0]<360 and a[1]>640:
+            a[0] = 1280-a[0]
+        elif a[0]>360 and a[1]>640:
+            a[1] = 720-a[1]
+        elif a[0]<360 and a[1]>640:
+            a[0] = 1280-a[0]
+        self.save_dviz = a
+        
     def scrolling(self):
         for i in range(20):
                 pag.scroll(1000)
