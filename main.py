@@ -1,4 +1,3 @@
-print('STARTING APP...')
 import json
 # import pd
 from math import sqrt
@@ -38,19 +37,21 @@ except:
 path_screen = '13yolo.jpg'
 
 
-img_atack   = cv2.imread('atack.png')
-img_atack   = img_atack[68:71, 283:295]
+img_atack       = cv2.imread('atack.png')
+img_atack       = img_atack[68:71, 283:295]
 
-img_looting = cv2.imread('looting.png')
-img_looting = img_looting[447:472, 520:546]
+img_looting     = cv2.imread('looting.png')
+img_looting     = img_looting[447:472, 520:546]
 
-img_dange   = cv2.imread('dange.png')
-img_dange   = img_dange[578:635, 1118:1165]
+img_dange       = cv2.imread('dange.png')
+img_dange       = img_dange[578:635, 1118:1165]
+img_move_zone   = cv2.imread('move_zone.png')
+img_move_zone   = img_move_zone[146:150,400:535]
 
-dviz = [[scrn[0]//2+400, scrn[1]//2],
-        [scrn[0]//2-400, scrn[1]//2],
-        [scrn[0]//2, scrn[1]//2+300],
-        [scrn[0]//2, scrn[1]//2-300]]
+dviz            = [ [scrn[0]//2+400, scrn[1]//2],
+                    [scrn[0]//2-400, scrn[1]//2],
+                    [scrn[0]//2, scrn[1]//2+300],
+                    [scrn[0]//2, scrn[1]//2-300]]
 
 class Bot_API:
     def __init__(self) -> None:
@@ -61,7 +62,7 @@ class Bot_API:
                    ]
         self.timer = {i : datetime.now() for i in self.use[0]}
         try:
-            self.dviz = config["movement"]
+            self.dviz = config["movement"][0]
         except:
             self.dviz = []
         self.fight = 0
@@ -181,28 +182,41 @@ class Bot_API:
         return True
     
     def check_map(self):
-        if datetime.now() - self.last_scan > timedelta(3):
+        if datetime.now() - self.last_scan > timedelta(0,3):
             maper = self.img2[554:660, 1086:1191]
             diff = cv2.absdiff(maper, self.map)
             similarity = cv2.mean(diff)[0]
+            print(similarity)
             if int(similarity) == 0:
                 self.map = maper
                 self.reverse_dviz()
                 self.last_scan = datetime.now()
                 return False
+            else:
+                self.map = maper
+                self.last_scan = datetime.now()
+                
+        diff = cv2.absdiff(img_move_zone, self.img2[146:150,400:535])
+        similarity = cv2.mean(diff)[0]
+        if similarity<0.1:
+            pag.click(740, 560)
+            self.reverse_dviz()
+            self.reverse_dviz()   
+            pag.click(self.dviz[0], self.dviz[1])
+            pag.press('f')
+            sleep(timeout_move) 
+            return False
         return True
 
     def reverse_dviz(self):
-        a = self.dviz
-        if a[0]<360 and a[1]<640:
-            a[1] = 720-a[1]
-        elif a[0]<360 and a[1]>640:
-            a[0] = 1280-a[0]
-        elif a[0]>360 and a[1]>640:
-            a[1] = 720-a[1]
-        elif a[0]<360 and a[1]>640:
-            a[0] = 1280-a[0]
-        self.save_dviz = a
+        if self.dviz[0]>640 and self.dviz[1]>360:
+            self.dviz[0] = 1280 - self.dviz[0]
+        elif self.dviz[0]<640 and self.dviz[1]>360:
+            self.dviz[1] = 720 - self.dviz[1]
+        elif self.dviz[0]<640 and self.dviz[1]<360:
+            self.dviz[0] = 1280 - self.dviz[0]
+        else:
+            self.dviz[1] = 720 - self.dviz[1]
         
     def scrolling(self):
         for i in range(20):
@@ -218,6 +232,8 @@ class Bot_API:
         pag.moveTo(1150,600)
         self.scrolling()
 
+        pag.moveTo(640,360)
+
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
         img2 = open_cv_image[:, :, ::-1].copy()
@@ -230,8 +246,7 @@ class Bot_API:
                 if self.check_map():
                     if self.atack_or_looting():
                         if self.skaning():
-                            pag.click(self.dviz[0][0], self.dviz[0][1])
-                            self.dviz = self.dviz[1:] + [self.dviz[0]]
+                            pag.click(self.dviz[0], self.dviz[1])
                             pag.press('f')
                             sleep(timeout_move)
         
@@ -267,3 +282,11 @@ if flag:
     
 if dtnt[0] and dtnt[1]:
     bot.RUN()
+else:
+    print(bot.dviz)
+    bot.reverse_dviz()
+    print(bot.dviz)
+    bot.reverse_dviz()
+    bot.reverse_dviz()
+    print(bot.dviz)
+    bot.reverse_dviz()
