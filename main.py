@@ -177,6 +177,9 @@ class Bot_API:
             keyboard.press_and_release('a')
             sleep(10)
             self.scrolling()
+            pag.moveTo(1150,600)
+            self.scrolling()
+            pag.moveTo(640,360)
             sleep(1)
             return False
         return True
@@ -203,7 +206,6 @@ class Bot_API:
             self.reverse_dviz()
             self.reverse_dviz()   
             pag.click(self.dviz[0], self.dviz[1])
-            pag.press('f')
             sleep(timeout_move) 
             return False
         return True
@@ -240,16 +242,13 @@ class Bot_API:
 
         self.map = img2[554:660, 1086:1191]
         self.last_scan = datetime.now()
-
         while 1:
             if self.exit_dange():
-                if self.check_map():
-                    if self.atack_or_looting():
+                if self.atack_or_looting():   
+                    if self.check_map():
                         if self.skaning():
-                            pag.click(self.dviz[0], self.dviz[1])
-                            pag.press('f')
+                            pag.click(self.dviz[0], self.dviz[1])     
                             sleep(timeout_move)
-        
 
 
 

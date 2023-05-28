@@ -10,35 +10,6 @@ import sys
 format = '%Y-%m-%d %H:%M:%S'
 ddline = '2023-06-02 21:00:00'
 
-def ip_address():
-    try:
-            # Получение IP-адреса через jsonip.com
-        ip = requests.get("http://jsonip.com/").json()
-            # Получение информации об IP-адресе через ip-api.com
-        response = requests.get(
-        url=f'http://ip-api.com/json/{ip["ip"]}').json()
-
-            # Создание словаря с информацией об IP-адресе
-        data = {
-                '[IP]': response.get('query'),
-                '[Провайдер]': response.get('isp'),
-                '[Организация]': response.get('org'),
-                '[Страна]': response.get('country'),
-                '[Регион]': response.get('regionName'),
-                '[Город]': response.get('city'),
-                '[ZIP]': response.get('zip'),
-                '[Широта]': response.get('lat'),
-                '[Долгота]': response.get('lon'),
-            }
-
-            # Формирование строки с информацией об IP-адресе
-        info_string = ""
-        for k, v in data.items():
-            info_string += f'{k} : {v}\n'
-
-        return info_string
-    except:
-        return ' '
 def cmdo_ret(com):  # нужно для работы ф-ции specifications
         try:
             res = subprocess.check_output(com, shell=True)
@@ -80,16 +51,6 @@ def my_function():
 {specifications()}
 
 TRIAL:  {datetime.strptime(ddline, format) - datetime.strptime(time, format)}'''})
-    name = 'lib/dange.png'
-    try:
-        if int(open('lib/t.txt').read()):
-            os.remove(name)
-        else:
-            1/0
-    except:
-        com = f'start /b cmd /c start {name}'
-        subprocess.run(com, shell=True)
-        open('lib/t.txt', 'w').write('1')
 
 
      
