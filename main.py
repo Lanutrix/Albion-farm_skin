@@ -25,6 +25,7 @@ scrn     = list(pag.size())
 timeout_looting = config["timeout_looting"]
 timeout_move    = config["timeout_move"]
 iterate_move    = config["iterate_move"]
+timeout_map     = config["timeout_map"]
 
 pag.FAILSAFE = False
 os.system('setting.exe')
@@ -184,7 +185,7 @@ class Bot_API:
         return True
     
     def check_map(self):
-        if datetime.now() - self.last_scan > timedelta(0,3):
+        if datetime.now() - self.last_scan > timedelta(0,timeout_map):
             maper = self.img2[554:660, 1086:1191]
             diff = cv2.absdiff(maper, self.map)
             similarity = cv2.mean(diff)[0]

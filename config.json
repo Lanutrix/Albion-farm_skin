@@ -1,1 +1,1 @@
-{"cnn": 0.5, "skills": [["q", "e"], [3, 12]], "timeout_looting": 2, "timeout_move": 0.2, "iterate_move": 4, "movement": [[1001, 406]]}
+{"cnn": 0.5, "skills": [["q", "e"], [3, 12]], "timeout_looting": 2, "timeout_move": 0.2, "iterate_move": 4, "timeout_map":2, "movement": [[1001, 406]]}
