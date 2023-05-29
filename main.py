@@ -15,19 +15,21 @@ import cv2
 from sys import exit as qx
 from time import sleep
 
-pag.FAILSAFE = False
-os.system('setting.exe')
 
 root = tk.Tk()
 root.withdraw()
 
 config          = json.loads(open('config.json').read())
 model           = YOLO('pyst.pt')
-scrn            = list(pag.size())
+scrn     = list(pag.size())
 timeout_looting = config["timeout_looting"]
 timeout_move    = config["timeout_move"]
+iterate_move    = config["iterate_move"]
 
-person  = [scrn[0]//2, scrn[1]//2-30]
+pag.FAILSAFE = False
+os.system('setting.exe')
+
+person  = [1280//2, 720//2-30]
 system_drive = f"{os.getenv('APPDATA')}\\Skinner"
 print(system_drive)
 try:
@@ -48,10 +50,6 @@ img_dange       = img_dange[578:635, 1118:1165]
 img_move_zone   = cv2.imread('move_zone.png')
 img_move_zone   = img_move_zone[146:150,400:535]
 
-dviz            = [ [scrn[0]//2+400, scrn[1]//2],
-                    [scrn[0]//2-400, scrn[1]//2],
-                    [scrn[0]//2, scrn[1]//2+300],
-                    [scrn[0]//2, scrn[1]//2-300]]
 
 class Bot_API:
     def __init__(self) -> None:
@@ -161,6 +159,7 @@ class Bot_API:
         if similarity < 1:
             self.fight = 0
             sleep(timeout_looting)
+            self.last_scan = datetime.now()
             return False
         return True
     
@@ -194,21 +193,17 @@ class Bot_API:
                 self.map = maper
                 self.reverse_dviz()
                 self.last_scan = datetime.now()
-                return False
             else:
                 self.map = maper
                 self.last_scan = datetime.now()
                 
         diff = cv2.absdiff(img_move_zone, self.img2[146:150,400:535])
         similarity = cv2.mean(diff)[0]
-        if similarity<0.1:
+        print(similarity)
+        if int(similarity) < 2:
             pag.click(740, 560)
             self.reverse_dviz()
-            self.reverse_dviz()   
-            pag.click(self.dviz[0], self.dviz[1])
-            sleep(timeout_move) 
-            return False
-        return True
+            self.reverse_dviz()
 
     def reverse_dviz(self):
         if self.dviz[0]>640 and self.dviz[1]>360:
@@ -222,13 +217,15 @@ class Bot_API:
         
     def scrolling(self):
         for i in range(20):
-                pag.scroll(1000)
-                sleep(0.03)
+            pag.scroll(1000)
+            sleep(0.01)
 
 
     def RUN(self):
         os.chdir(system_drive)
-        print('START')            
+        print('START')
+
+        pag.moveTo(640,360)     
         self.scrolling()
 
         pag.moveTo(1150,600)
@@ -243,21 +240,22 @@ class Bot_API:
         self.map = img2[554:660, 1086:1191]
         self.last_scan = datetime.now()
         while 1:
-            if self.exit_dange():
-                if self.atack_or_looting():   
-                    if self.check_map():
+            for i in range(iterate_move+1):
+                if self.exit_dange():
+                    if self.atack_or_looting():   
+                        self.check_map()
                         if self.skaning():
-                            pag.click(self.dviz[0], self.dviz[1])     
-                            sleep(timeout_move)
+                            if i == iterate_move:
+                                pag.click(self.dviz[0], self.dviz[1])     
+                                sleep(timeout_move)
+                            else:
+                                sleep(timeout_move)
 
 
 
 
 bot = Bot_API()
-
-
 print('APP WAS LOADED')
-sleep(3)
 scrn    = list(pag.size())
 processes = psutil.process_iter()
 flag = 1
@@ -281,11 +279,4 @@ if flag:
     
 if dtnt[0] and dtnt[1]:
     bot.RUN()
-else:
-    print(bot.dviz)
-    bot.reverse_dviz()
-    print(bot.dviz)
-    bot.reverse_dviz()
-    bot.reverse_dviz()
-    print(bot.dviz)
-    bot.reverse_dviz()
+

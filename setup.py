@@ -11,7 +11,7 @@ executables = [
     ]
 
 setup(name='avtoskin.exe',
-        version='3.0',
+        version='3.1',
         description='avtoskin',
         options={'build_exe': build_options},
         executables=executables)
