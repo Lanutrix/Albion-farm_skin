@@ -71,45 +71,27 @@ class Bot_API:
                 pag.press(self.use[0][i])
                 self.timer[self.use[0][i]] = datetime.now()
 
-    def vector_move(self):
-        xy = pag.position()
-        self.dviz += [[xy[0], xy[1]]]
-        print(self.dviz)
-
-    def clear_dviz(self):
-        print('CLEAR')
-        self.dviz = []
-
-    def save_dviz(self):
-        global config
-        print('SAVE CONFIG')
-        config['movement'] = self.dviz
-        open('config.json', 'w').write(json.dumps(config))
-
     def skaning(self):
         if self.fight:
-            sleep(2.3)
+            sleep(1)
             self.fight = 0
             return False
         screenshot = ImageGrab.grab()
         screenshot.save(path_screen)
-        sleep(0.05)
+        sleep(0.01)
         results = model.predict(path_screen, show = False, save=False, imgsz=(1280, 736), conf=config['cnn'], line_thickness = 1)
-        sleep(0.05)
-        os.remove(path_screen)
-        mobs = [[], []]
+        mobs = [[]]
         for r in results:
             for c in r.boxes:
                 x=(int(c.xyxy[0][0])+int(c.xyxy[0][2]))//2
                 y=(int(c.xyxy[0][1])+int(c.xyxy[0][3]))//2
-                mobs[0].append([x ,y])
-            for c in r.boxes.cls:
-                mobs[1].append(int(c))
+                mobs[0].append([x, y])
+
         if mobs[0]:
             x1, y1 = person
             min_distance = 10_000
             nearest_point = None
-            for point in range(len(mobs[1])):
+            for point in range(len(mobs[0])):
                 x2, y2 = mobs[0][point][0], mobs[0][point][1]
                 distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
                 if distance < min_distance:
@@ -117,31 +99,15 @@ class Bot_API:
                     nearest_point = mobs[0][point]
             pag.click(nearest_point)
             sleep(2)
-
-            screenshot = ImageGrab.grab()
-            open_cv_image = np.array(screenshot)
-            img2 = open_cv_image[:, :, ::-1].copy()
-            pixel2 = img2[68:71, 283:295]
-            diff = cv2.absdiff(img_atack, pixel2)
-            similarity = cv2.mean(diff)[0]
-            if similarity < 2.4:
-                pag.press('space')
-                for i in range(len(self.use[0])):
-                    if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
-                        pag.press(self.use[0][i])
-                        self.timer[self.use[0][i]] = datetime.now()
-                return False
-            pixel2 = img2[447:472, 520:546]
-            diff = cv2.absdiff(img_looting, pixel2)
-            similarity = cv2.mean(diff)[0]
-            if similarity < 1:
-                return False
-            
+            return self.atack_or_looting()
         return True
         
 
     def atack_or_looting(self):
-        pixel2 = self.img2[68:71, 283:295]
+        screenshot = ImageGrab.grab()
+        open_cv_image = np.array(screenshot)
+        img2 = open_cv_image[:, :, ::-1].copy()
+        pixel2 = img2[68:71, 283:295]
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 1:
@@ -151,9 +117,10 @@ class Bot_API:
                     pag.press(self.use[0][i])
                     self.timer[self.use[0][i]] = datetime.now()
             self.fight = 1
-            sleep(1.6)
+            sleep(1.5)
+            self.last_scan = datetime.now()
             return False
-        pixel2 = self.img2[447:472, 520:546]
+        pixel2 = img2[447:472, 520:546]
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 1:
@@ -166,7 +133,7 @@ class Bot_API:
     def exit_dange(self):
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
-        self.img2 = open_cv_image[:, :, ::-1].copy()
+        img2 = open_cv_image[:, :, ::-1].copy()
         pixel2 = self.img2[578:635, 1118:1165]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
@@ -185,7 +152,10 @@ class Bot_API:
     
     def check_map(self):
         if datetime.now() - self.last_scan > timedelta(0,timeout_map):
-            maper = self.img2[554:660, 1086:1191]
+            screenshot = ImageGrab.grab()
+            open_cv_image = np.array(screenshot)
+            img2 = open_cv_image[:, :, ::-1].copy()
+            maper = img2[554:660, 1086:1191]
             diff = cv2.absdiff(maper, self.map)
             similarity = cv2.mean(diff)[0]
             print(similarity)
@@ -197,7 +167,7 @@ class Bot_API:
                 self.map = maper
                 self.last_scan = datetime.now()
                 
-        diff = cv2.absdiff(img_move_zone, self.img2[146:150,400:535])
+        diff = cv2.absdiff(img_move_zone, img2[146:150,400:535])
         similarity = cv2.mean(diff)[0]
         print(similarity)
         if int(similarity) < 2:
@@ -240,15 +210,12 @@ class Bot_API:
         self.map = img2[554:660, 1086:1191]
         self.last_scan = datetime.now()
         while 1:
-            for i in range(iterate_move+1):
-                if self.exit_dange():
-                    if self.atack_or_looting():   
-                        self.check_map()
-                        if self.skaning():
-                            if i == iterate_move:
-                                pag.click(self.dviz[0], self.dviz[1])     
-                            else:
-                                pass
+            if self.exit_dange():
+                if self.atack_or_looting():   
+                    self.check_map()
+                    if self.skaning():
+                        pag.click(self.dviz[0], self.dviz[1])     
+
 
 
 
