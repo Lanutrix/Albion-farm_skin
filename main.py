@@ -106,10 +106,10 @@ class Bot_API:
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
         img2 = open_cv_image[:, :, ::-1].copy()
-        pixel2 = img2[68:71, 283:295]
+        pixel2 = img2[68:71, 283:295].copy()
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
-        if similarity < 1:
+        if similarity <= 1:
             pag.press('space')
             for i in range(len(self.use[0])):
                 if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
@@ -119,10 +119,10 @@ class Bot_API:
             sleep(1.5)
             self.last_scan = datetime.now()
             return False
-        pixel2 = img2[447:472, 520:546]
+        pixel2 = img2[447:472, 520:546].copy()
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
-        if similarity < 1:
+        if similarity <= 1:
             self.fight = 0
             sleep(timeout_looting)
             self.last_scan = datetime.now()
@@ -232,21 +232,21 @@ flag = 1
 
 dtnt = [0, 0]
 
-# for i in processes:
-#     if i.name() == 'Albion-Online.exe':
-#         flag = 0
-#         dtnt[0] = 1
+for i in processes:
+    if i.name() == 'Albion-Online.exe':
+        flag = 0
+        dtnt[0] = 1
 
-# if scrn!=[1280, 720]:
-#     messagebox.showerror("Неправильное разрешение экрана",
-#                                             "Установите разрешение 1280х720")
-# else:
-#     dtnt[1] = 1
+if scrn!=[1280, 720]:
+    messagebox.showerror("Неправильное разрешение экрана",
+                                            "Установите разрешение 1280х720")
+else:
+    dtnt[1] = 1
 
-# if flag:
-#     messagebox.showerror("Запустите игру",
-#                                             "На данный момент Albion-Online не запущен")
+if flag:
+    messagebox.showerror("Запустите игру",
+                                            "На данный момент Albion-Online не запущен")
     
-# if dtnt[0] and dtnt[1]:
-bot.RUN()
-
+if dtnt[0] and dtnt[1]:
+# print(bot.atack_or_looting())
+    bot.RUN()
