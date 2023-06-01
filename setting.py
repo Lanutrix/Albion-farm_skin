@@ -15,8 +15,6 @@ def get_mouse_position():
 
 
 config = json.loads(open('config.json').read())
-timeout_looting = config["timeout_looting"]
-timeout_move = config["timeout_move"]
 
 system_drive = f"{os.getenv('APPDATA')}\\Skinner"
 print(system_drive)
