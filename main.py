@@ -21,9 +21,8 @@ root.withdraw()
 
 config          = json.loads(open('config.json').read())
 model           = YOLO('pyst.pt')
-scrn     = list(pag.size())
+scrn            = list(pag.size())
 timeout_looting = config["timeout_looting"]
-timeout_move    = config["timeout_move"]
 iterate_move    = config["iterate_move"]
 timeout_map     = config["timeout_map"]
 
@@ -248,9 +247,8 @@ class Bot_API:
                         if self.skaning():
                             if i == iterate_move:
                                 pag.click(self.dviz[0], self.dviz[1])     
-                                sleep(timeout_move)
                             else:
-                                sleep(timeout_move)
+                                pass
 
 
 
