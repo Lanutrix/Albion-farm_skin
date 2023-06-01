@@ -78,7 +78,7 @@ class Bot_API:
         screenshot = ImageGrab.grab()
         screenshot.save(path_screen)
         sleep(0.01)
-        results = model.predict(path_screen, show = False, save=False, imgsz=(1280, 736), conf=config['cnn'], line_thickness = 1)
+        results = model.predict(path_screen, show = False, save=False, imgsz=(1280, 736), conf=config['cnn'])
         mobs = [[]]
         for r in results:
             for c in r.boxes:
@@ -166,7 +166,12 @@ class Bot_API:
                 self.map = maper
                 self.last_scan = datetime.now()
                 
-        diff = cv2.absdiff(img_move_zone, img2[146:150,400:535])
+            diff = cv2.absdiff(img_move_zone, img2[146:150,400:535])
+        else:
+            screenshot = ImageGrab.grab()
+            open_cv_image = np.array(screenshot)
+            img2 = open_cv_image[:, :, ::-1].copy()
+            diff = cv2.absdiff(img_move_zone, img2[146:150,400:535])
         similarity = cv2.mean(diff)[0]
         print(similarity)
         if int(similarity) < 2:
@@ -227,21 +232,21 @@ flag = 1
 
 dtnt = [0, 0]
 
-for i in processes:
-    if i.name() == 'Albion-Online.exe':
-        flag = 0
-        dtnt[0] = 1
+# for i in processes:
+#     if i.name() == 'Albion-Online.exe':
+#         flag = 0
+#         dtnt[0] = 1
 
-if scrn!=[1280, 720]:
-    messagebox.showerror("Неправильное разрешение экрана",
-                                            "Установите разрешение 1280х720")
-else:
-    dtnt[1] = 1
+# if scrn!=[1280, 720]:
+#     messagebox.showerror("Неправильное разрешение экрана",
+#                                             "Установите разрешение 1280х720")
+# else:
+#     dtnt[1] = 1
 
-if flag:
-    messagebox.showerror("Запустите игру",
-                                            "На данный момент Albion-Online не запущен")
+# if flag:
+#     messagebox.showerror("Запустите игру",
+#                                             "На данный момент Albion-Online не запущен")
     
-if dtnt[0] and dtnt[1]:
-    bot.RUN()
+# if dtnt[0] and dtnt[1]:
+bot.RUN()
 
