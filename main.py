@@ -6,7 +6,6 @@ from PIL import ImageGrab
 from datetime import datetime, timedelta
 import keyboard
 import numpy as np
-from ultralytics import YOLO
 import psutil
 import pyautogui as pag
 import tkinter as tk
@@ -14,13 +13,15 @@ from tkinter import messagebox
 import cv2
 from sys import exit as qx
 from time import sleep
+import ultralytics
+ultralytics.checks()
 
 
 root = tk.Tk()
 root.withdraw()
 
 config          = json.loads(open('config.json').read())
-model           = YOLO('pyst.pt')
+model           = ultralytics.YOLO('pyst.pt')
 scrn            = list(pag.size())
 timeout_looting = config["timeout_looting"]
 timeout_map     = config["timeout_map"]
