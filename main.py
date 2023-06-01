@@ -23,7 +23,6 @@ config          = json.loads(open('config.json').read())
 model           = YOLO('pyst.pt')
 scrn            = list(pag.size())
 timeout_looting = config["timeout_looting"]
-iterate_move    = config["iterate_move"]
 timeout_map     = config["timeout_map"]
 
 pag.FAILSAFE = False
@@ -134,7 +133,7 @@ class Bot_API:
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
         img2 = open_cv_image[:, :, ::-1].copy()
-        pixel2 = self.img2[578:635, 1118:1165]
+        pixel2 = img2[578:635, 1118:1165]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 2.2:
