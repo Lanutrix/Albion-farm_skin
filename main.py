@@ -64,7 +64,8 @@ class Bot_API:
         except:
             self.dviz = []
         self.fight = 0
-
+        self.dviz_arr = {'1':[640,1], '2':[1279,1],'3':[1279,360], '4':[1279,719], '5':[640,719], '6':[1,719], '7':[1,360], '8':[1,1]}
+        self.move_position = 1
     def atack_press_skills(self):
         for i in range(len(self.use[0])):
             if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
@@ -141,7 +142,7 @@ class Bot_API:
             print('dange')
             sleep(2)
             keyboard.press_and_release('a')
-            sleep(10)
+            sleep(12)
             self.scrolling()
             pag.moveTo(1150,600)
             self.scrolling()
@@ -179,16 +180,15 @@ class Bot_API:
             pag.click(740, 560)
             self.reverse_dviz()
             self.reverse_dviz()
+            self.reverse_dviz()
+            self.reverse_dviz()
 
     def reverse_dviz(self):
-        if self.dviz[0]>640 and self.dviz[1]>360:
-            self.dviz[0] = 1280 - self.dviz[0]
-        elif self.dviz[0]<640 and self.dviz[1]>360:
-            self.dviz[1] = 720 - self.dviz[1]
-        elif self.dviz[0]<640 and self.dviz[1]<360:
-            self.dviz[0] = 1280 - self.dviz[0]
+        if self.move_position>8:
+            self.move_position = self.move_position - 8
         else:
-            self.dviz[1] = 720 - self.dviz[1]
+            self.move_position += 1
+        self.dviz = self.dviz_arr[str(self.move_position)]
         
     def scrolling(self):
         for i in range(20):
