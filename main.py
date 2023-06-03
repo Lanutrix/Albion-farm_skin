@@ -45,7 +45,7 @@ img_atack       = cv2.imread('atack.png')
 img_atack       = img_atack[68:71, 283:295]
 
 img_looting     = cv2.imread('looting.png')
-img_looting     = img_looting[447:472, 520:546]
+img_looting     = img_looting[447:472, 520:530]
 
 img_dange       = cv2.imread('dange.png')
 img_dange       = img_dange[667:691, 350:371]
@@ -125,10 +125,10 @@ class Bot_API:
             sleep(1.5)
             self.last_scan = datetime.now()
             return False
-        pixel2 = img2[447:472, 520:546].copy()
+        pixel2 = img2[447:472, 520:530].copy()
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
-        if similarity <= 1:
+        if int(similarity) <= 9:
             self.fight = 0
             sleep(timeout_looting)
             self.last_scan = datetime.now()
@@ -142,7 +142,7 @@ class Bot_API:
         pixel2 = img2[667:691, 350:371]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
-        if similarity < 2.2:
+        if int(similarity) <= 2:
             print('dange')
             sleep(2)
             keyboard.press_and_release('a')
