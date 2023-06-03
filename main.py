@@ -184,10 +184,7 @@ class Bot_API:
             self.reverse_dviz()
 
     def reverse_dviz(self):
-        if self.move_position>8:
-            self.move_position = self.move_position - 8
-        else:
-            self.move_position += 1
+        self.move_position = 1 if self.move_position==8 else 1+self.move_position
         self.dviz = self.dviz_arr[str(self.move_position)]
         
     def scrolling(self):
