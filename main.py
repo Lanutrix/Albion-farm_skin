@@ -115,7 +115,7 @@ class Bot_API:
         pixel2 = img2[68:71, 283:295].copy()
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
-        if similarity <= 1:
+        if similarity <= 5:
             pag.press('space')
             for i in range(len(self.use[0])):
                 if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
