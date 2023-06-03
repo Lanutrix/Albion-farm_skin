@@ -100,7 +100,7 @@ class Bot_API:
                 x2, y2 = mobs[0][point][0], mobs[0][point][1]
                 distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
                 if distance < min_distance:
-                    min_distance  = distance
+                    min_distance = distance
                     nearest_point = mobs[0][point]
             pag.click(nearest_point)
             sleep(2.5)
@@ -115,7 +115,7 @@ class Bot_API:
         pixel2 = img2[68:71, 283:295].copy()
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
-        if similarity <= 5:
+        if int(similarity) <= 1:
             pag.press('space')
             for i in range(len(self.use[0])):
                 if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
@@ -128,7 +128,7 @@ class Bot_API:
         pixel2 = img2[447:472, 520:530].copy()
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
-        if int(similarity) <= 9:
+        if int(similarity) <= 5:
             self.fight = 0
             sleep(timeout_looting)
             self.last_scan = datetime.now()
@@ -142,7 +142,7 @@ class Bot_API:
         pixel2 = img2[667:691, 350:371]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
-        if int(similarity) <= 15:
+        if int(similarity) <= 9:
             print('dange')
             sleep(2)
             keyboard.press_and_release('a')
@@ -220,12 +220,13 @@ class Bot_API:
         while 1:
             if self.exit_dange():
                 self.check_map()
-                if self.atack_or_looting():
+                if self.atack_or_looting():   
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
-                    else:
                         pag.click(self.dviz[0], self.dviz[1])
-                        sleep(1.5)
+                    # else:
+                    #     pag.click(self.dviz[0], self.dviz[1])
+                    #     sleep(1.5)
 
 
 
