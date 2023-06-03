@@ -14,6 +14,8 @@ import cv2
 from sys import exit as qx
 from time import sleep
 import ultralytics
+from random import randint
+
 ultralytics.checks()
 
 
@@ -46,7 +48,8 @@ img_looting     = cv2.imread('looting.png')
 img_looting     = img_looting[447:472, 520:546]
 
 img_dange       = cv2.imread('dange.png')
-img_dange       = img_dange[578:635, 1118:1165]
+img_dange       = img_dange[667:691, 350:371]
+
 img_move_zone   = cv2.imread('move_zone.png')
 img_move_zone   = img_move_zone[146:150,400:535]
 
@@ -66,6 +69,7 @@ class Bot_API:
         self.fight = 0
         self.dviz_arr = {'1':[640,1], '2':[1279,1],'3':[1279,360], '4':[1279,719], '5':[640,719], '6':[1,719], '7':[1,360], '8':[1,1]}
         self.move_position = 1
+
     def atack_press_skills(self):
         for i in range(len(self.use[0])):
             if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
@@ -135,7 +139,7 @@ class Bot_API:
         screenshot = ImageGrab.grab()
         open_cv_image = np.array(screenshot)
         img2 = open_cv_image[:, :, ::-1].copy()
-        pixel2 = img2[578:635, 1118:1165]
+        pixel2 = img2[667:691, 350:371]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
         if similarity < 2.2:
@@ -178,14 +182,16 @@ class Bot_API:
         print(similarity)
         if int(similarity) < 2:
             pag.click(740, 560)
-            self.reverse_dviz()
-            self.reverse_dviz()
-            self.reverse_dviz()
-            self.reverse_dviz()
+            self.move_position = self.move_position+4 if 0<self.move_position<=4 else self.move_position-4 
+            self.dviz = self.dviz_arr[str(self.move_position)] 
+
 
     def reverse_dviz(self):
-        self.move_position = 1 if self.move_position==8 else 1+self.move_position
-        self.dviz = self.dviz_arr[str(self.move_position)]
+        random_position = randint(1,8)
+        while self.move_position == random_position:
+            random_position = randint(1,8)
+        self.move_position = random_position 
+        self.dviz = self.dviz_arr[str(self.move_position)] 
         
     def scrolling(self):
         for i in range(20):
@@ -213,8 +219,8 @@ class Bot_API:
         self.last_scan = datetime.now()
         while 1:
             if self.exit_dange():
+                self.check_map()
                 if self.atack_or_looting():   
-                    self.check_map()
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])     
 
