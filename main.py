@@ -100,7 +100,7 @@ class Bot_API:
                 x2, y2 = mobs[0][point][0], mobs[0][point][1]
                 distance = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
                 if distance < min_distance:
-                    min_distance = distance
+                    min_distance  = distance
                     nearest_point = mobs[0][point]
             pag.click(nearest_point)
             sleep(2)
@@ -223,7 +223,7 @@ class Bot_API:
                 if self.atack_or_looting():  
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
-                    elif self.fight:
+                    else:
                         pag.click(self.dviz[0], self.dviz[1])
                         sleep(1.5)
 
