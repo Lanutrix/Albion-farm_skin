@@ -78,7 +78,7 @@ class Bot_API:
 
     def skaning(self):
         if self.fight:
-            sleep(1)
+            sleep(3)
             self.fight = 0
             return False
         screenshot = ImageGrab.grab()
@@ -122,7 +122,7 @@ class Bot_API:
                     pag.press(self.use[0][i])
                     self.timer[self.use[0][i]] = datetime.now()
             self.fight = 1
-            sleep(1.5)
+            sleep(3.05)
             self.last_scan = datetime.now()
             return False
         pixel2 = img2[447:472, 520:530].copy()
@@ -220,12 +220,12 @@ class Bot_API:
         while 1:
             if self.exit_dange():
                 self.check_map()
-                if self.atack_or_looting():  
+                if self.atack_or_looting():
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
                     else:
                         pag.click(self.dviz[0], self.dviz[1])
-                        sleep(0.7)
+                        sleep(1.5)
 
 
 
