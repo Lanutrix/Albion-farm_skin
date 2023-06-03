@@ -142,7 +142,7 @@ class Bot_API:
         pixel2 = img2[667:691, 350:371]
         diff = cv2.absdiff(img_dange, pixel2)
         similarity = cv2.mean(diff)[0]
-        if int(similarity) <= 2:
+        if int(similarity) <= 15:
             print('dange')
             sleep(2)
             keyboard.press_and_release('a')
