@@ -220,9 +220,12 @@ class Bot_API:
         while 1:
             if self.exit_dange():
                 self.check_map()
-                if self.atack_or_looting():   
+                if self.atack_or_looting():  
                     if self.skaning():
-                        pag.click(self.dviz[0], self.dviz[1])     
+                        pag.click(self.dviz[0], self.dviz[1])
+                    elif self.fight:
+                        pag.click(self.dviz[0], self.dviz[1])
+                        sleep(1.5)
 
 
 
