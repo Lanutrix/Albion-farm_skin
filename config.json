@@ -1,6 +1,6 @@
 {   
     "cnn": 0.5,
-    "skills": [["q", "e"], [3, 12]],
+    "skills": [["q", "e", "w"], [3, 12, 13]],
     "timeout_looting": 2,
     "timeout_map": 2,
     "loot_similarity": 10,

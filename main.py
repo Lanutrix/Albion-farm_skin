@@ -54,6 +54,7 @@ img_move_zone   = img_move_zone[146:150,400:535]
 
 loot_similarity = config["loot_similarity"]
 atack_similarity = config["atack_similarity"]
+time_atack = config["time_atack"]
 
 
 class Bot_API:
@@ -69,6 +70,7 @@ class Bot_API:
         self.dviz_arr = {'1':[640,1], '2':[1279,1],'3':[1279,360], '4':[1279,719], '5':[640,719], '6':[1,719], '7':[1,360], '8':[1,1]}
         self.move_position = 1
         self.dviz = self.dviz_arr[str(self.move_position)]
+        self.fight_one = 0
 
     def atack_press_skills(self):
         for i in range(len(self.use[0])):
@@ -80,6 +82,7 @@ class Bot_API:
         if self.fight:
             sleep(2)
             self.fight = 0
+            self.fight_one = 0
             return False
         screenshot = ImageGrab.grab()
         screenshot.save(path_screen)
@@ -116,20 +119,27 @@ class Bot_API:
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
         if int(similarity) <= atack_similarity:
+            if self.fight_one == 0:
+                self.time_atack = datetime.now()
+                self.fight_one = 1
+                
             pag.press('space')
             for i in range(len(self.use[0])):
                 if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
                     pag.press(self.use[0][i])
                     self.timer[self.use[0][i]] = datetime.now()
             self.fight = 1
-            sleep(3.05)
+            sleep(1.01)
             self.last_scan = datetime.now()
             return False
+        else:
+            self.fight=0
+            self.fight_one = 0
+
         pixel2 = img2[447:472, 520:530].copy()
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
         if int(similarity) <= loot_similarity:
-            self.fight = 0
             sleep(timeout_looting)
             self.last_scan = datetime.now()
             return False
@@ -220,16 +230,24 @@ class Bot_API:
         while 1:
             if self.exit_dange():
                 self.check_map()
-                if self.atack_or_looting():   
+                if self.atack_or_looting():
+
+                    if self.fight_one:
+                        if datetime.now() - self.time_atack >= timedelta(0,20):
+                            for kolw in range(5):
+                                pag.click(self.dviz[0], self.dviz[1])
+                                sleep(1)
+                            self.fight_one = 0
+                            self.fight = 0
+
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
                         if self.skaning():
                             pag.click(self.dviz[0], self.dviz[1])
                         else:
-                            pag.click(self.dviz[0], self.dviz[1])
-                            sleep(1)
-                            pag.click(self.dviz[0], self.dviz[1])
-                            sleep(1)
+                            for kol in range(3):
+                                pag.click(self.dviz[0], self.dviz[1])
+                                sleep(1)
 
 
 
