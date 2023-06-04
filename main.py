@@ -242,12 +242,12 @@ class Bot_API:
 
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
-                        if self.skaning():
+                        sleep(0.3)
+                        pag.click(self.dviz[0], self.dviz[1])
+                    else:
+                        for kol in range(3):
                             pag.click(self.dviz[0], self.dviz[1])
-                        else:
-                            for kol in range(3):
-                                pag.click(self.dviz[0], self.dviz[1])
-                                sleep(1)
+                            sleep(1)
 
 
 
