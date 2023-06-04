@@ -29,7 +29,6 @@ timeout_looting = config["timeout_looting"]
 timeout_map     = config["timeout_map"]
 
 pag.FAILSAFE = False
-os.system('setting.exe')
 
 person  = [1280//2, 720//2-30]
 system_drive = f"{os.getenv('APPDATA')}\\Skinner"
@@ -52,6 +51,9 @@ img_dange       = img_dange[667:691, 350:371]
 
 img_move_zone   = cv2.imread('move_zone.png')
 img_move_zone   = img_move_zone[146:150,400:535]
+
+loot_similarity = config["loot_similarity"]
+atack_similarity = config["atack_similarity"]
 
 
 class Bot_API:
@@ -115,7 +117,7 @@ class Bot_API:
         pixel2 = img2[68:71, 283:295].copy()
         diff = cv2.absdiff(img_atack, pixel2)
         similarity = cv2.mean(diff)[0]
-        if int(similarity) <= 1:
+        if int(similarity) <= atack_similarity:
             pag.press('space')
             for i in range(len(self.use[0])):
                 if datetime.now() - self.timer[self.use[0][i]] > self.use[1][i]:
@@ -128,7 +130,7 @@ class Bot_API:
         pixel2 = img2[447:472, 520:530].copy()
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
-        if int(similarity) <= 5:
+        if int(similarity) <= loot_similarity:
             self.fight = 0
             sleep(timeout_looting)
             self.last_scan = datetime.now()
@@ -257,7 +259,8 @@ else:
 if flag:
     messagebox.showerror("Запустите игру",
                                             "На данный момент Albion-Online не запущен")
-    
+os.system('setting.exe')
+
 if dtnt[0] and dtnt[1]:
 # print(bot.atack_or_looting())
     bot.RUN()
