@@ -78,7 +78,7 @@ class Bot_API:
 
     def skaning(self):
         if self.fight:
-            sleep(3)
+            sleep(2)
             self.fight = 0
             return False
         screenshot = ImageGrab.grab()
@@ -103,7 +103,7 @@ class Bot_API:
                     min_distance = distance
                     nearest_point = mobs[0][point]
             pag.click(nearest_point)
-            sleep(2.5)
+            sleep(2)
             return self.atack_or_looting()
         return True
         
@@ -223,10 +223,13 @@ class Bot_API:
                 if self.atack_or_looting():   
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
-                        pag.click(self.dviz[0], self.dviz[1])
-                    # else:
-                    #     pag.click(self.dviz[0], self.dviz[1])
-                    #     sleep(1.5)
+                        if self.skaning():
+                            pag.click(self.dviz[0], self.dviz[1])
+                        else:
+                            pag.click(self.dviz[0], self.dviz[1])
+                            sleep(1)
+                            pag.click(self.dviz[0], self.dviz[1])
+                            sleep(1)
 
 
 
