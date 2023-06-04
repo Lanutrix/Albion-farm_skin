@@ -105,8 +105,13 @@ class Bot_API:
                     min_distance = distance
                     nearest_point = mobs[0][point]
             pag.click(nearest_point)
-            sleep(2)
-            return self.atack_or_looting()
+            sleep(3)
+            if self.atack_or_looting():
+                for kol in range(2):
+                    pag.click(self.dviz[0], self.dviz[1])
+                    sleep(0.6)
+                return True
+            else: False
         return True
         
 
@@ -121,6 +126,15 @@ class Bot_API:
             if self.fight_one == 0:
                 self.time_atack = datetime.now()
                 self.fight_one = 1
+            else:
+                if datetime.now() - self.time_atack >= timedelta(0,5):
+                    self.reverse_dviz()
+                    keyboard.press_and_release('alt+s q')
+                    for kolw in range(5):
+                        pag.click(self.dviz[0], self.dviz[1])
+                        sleep(1)
+                    self.fight_one = 0
+                    self.fight = 0
                 
             pag.press('space')
             for i in range(len(self.use[0])):
@@ -230,23 +244,11 @@ class Bot_API:
             if self.exit_dange():
                 self.check_map()
                 if self.atack_or_looting():
-
-                    if self.fight_one:
-                        if datetime.now() - self.time_atack >= timedelta(0,20):
-                            for kolw in range(5):
-                                pag.click(self.dviz[0], self.dviz[1])
-                                sleep(1)
-                            self.fight_one = 0
-                            self.fight = 0
-
                     if self.skaning():
                         pag.click(self.dviz[0], self.dviz[1])
-                        sleep(0.3)
-                        pag.click(self.dviz[0], self.dviz[1])
-                    else:
-                        for kol in range(3):
-                            pag.click(self.dviz[0], self.dviz[1])
-                            sleep(1)
+
+            print(self.fight)
+            print(self.fight_one)
 
 
 
