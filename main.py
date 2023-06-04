@@ -64,13 +64,11 @@ class Bot_API:
                         [timedelta(0, i) for i in config['skills'][1]]
                    ]
         self.timer = {i : datetime.now() for i in self.use[0]}
-        try:
-            self.dviz = config["movement"][0]
-        except:
-            self.dviz = []
+        
         self.fight = 0
         self.dviz_arr = {'1':[640,1], '2':[1279,1],'3':[1279,360], '4':[1279,719], '5':[640,719], '6':[1,719], '7':[1,360], '8':[1,1]}
         self.move_position = 1
+        self.dviz = self.dviz_arr[str(self.move_position)]
 
     def atack_press_skills(self):
         for i in range(len(self.use[0])):
