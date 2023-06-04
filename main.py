@@ -54,7 +54,6 @@ img_move_zone   = img_move_zone[146:150,400:535]
 
 loot_similarity = config["loot_similarity"]
 atack_similarity = config["atack_similarity"]
-time_atack = config["time_atack"]
 
 
 class Bot_API:
