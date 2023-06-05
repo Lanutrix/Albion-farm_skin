@@ -65,6 +65,7 @@ class Bot_API:
         self.move_position = 1
         self.dviz = self.dviz_arr[str(self.move_position)]
         self.fight_one = 0
+        self.looting_one = 0
 
     def atack_press_skills(self):
         for i in range(len(self.use[0])):
@@ -150,9 +151,16 @@ class Bot_API:
         diff = cv2.absdiff(img_looting, pixel2)
         similarity = cv2.mean(diff)[0]
         if int(similarity) <= loot_similarity:
+            if self.looting_one == 0:
+                self.looting_one = 1
+            
             sleep(timeout_looting)
             self.last_scan = datetime.now()
             return False
+        else:
+            if self.looting_one:
+                self.looting_one = 0
+                sleep(0.1)
         return True
     
     def exit_dange(self):
