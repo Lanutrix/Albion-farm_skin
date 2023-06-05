@@ -37,20 +37,15 @@ try:
     os.mkdir(system_drive)
 except:
     pass
+
 path_screen = '13yolo.jpg'
 
+profile = config["profile"]
 
-img_atack       = cv2.imread('atack.png')
-img_atack       = img_atack[68:71, 283:295]
-
-img_looting     = cv2.imread('looting.png')
-img_looting     = img_looting[447:472, 520:530]
-
-img_dange       = cv2.imread('dange.png')
-img_dange       = img_dange[667:691, 350:371]
-
-img_move_zone   = cv2.imread('move_zone.png')
-img_move_zone   = img_move_zone[146:150,400:535]
+img_atack       = cv2.imread(f'atack_{profile}.png')[68:71, 283:295]
+img_looting     = cv2.imread('looting_{profile}.png')[447:472, 520:530]
+img_dange       = cv2.imread('dange.png')[667:691, 350:371]
+img_move_zone   = cv2.imread('move_zone.png')[146:150,400:535]
 
 loot_similarity = config["loot_similarity"]
 atack_similarity = config["atack_similarity"]
@@ -128,7 +123,8 @@ class Bot_API:
                 self.fight_one = 1
             else:
                 if datetime.now() - self.time_atack >= timedelta(0,20):
-                    self.reverse_dviz()
+                    self.move_position = self.move_position+4 if 0<self.move_position<=4 else self.move_position-4 
+                    self.dviz = self.dviz_arr[str(self.move_position)]
                     keyboard.press_and_release('alt+s')
                     for kolw in range(5):
                         pag.click(self.dviz[0], self.dviz[1])
@@ -204,7 +200,7 @@ class Bot_API:
             diff = cv2.absdiff(img_move_zone, img2[146:150,400:535])
         similarity = cv2.mean(diff)[0]
         print(similarity)
-        if int(similarity) < 2:
+        if int(similarity) <= 3:
             pag.click(740, 560)
             self.move_position = self.move_position+4 if 0<self.move_position<=4 else self.move_position-4 
             self.dviz = self.dviz_arr[str(self.move_position)] 
@@ -280,5 +276,4 @@ if flag:
 os.system('setting.exe')
 
 if dtnt[0] and dtnt[1]:
-# print(bot.atack_or_looting())
     bot.RUN()
