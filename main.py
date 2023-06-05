@@ -43,7 +43,7 @@ path_screen = '13yolo.jpg'
 profile = config["profile"]
 
 img_atack       = cv2.imread(f'atack_{profile}.png')[68:71, 283:295]
-img_looting     = cv2.imread('looting_{profile}.png')[447:472, 520:530]
+img_looting     = cv2.imread(f'looting_{profile}.png')[447:472, 520:530]
 img_dange       = cv2.imread('dange.png')[667:691, 350:371]
 img_move_zone   = cv2.imread('move_zone.png')[146:150,400:535]
 
@@ -140,12 +140,20 @@ class Bot_API:
                     pag.press(self.use[0][i])
                     self.timer[self.use[0][i]] = datetime.now()
             self.fight = 1
-            sleep(1.01)
+            sleep(1.1)
             self.last_scan = datetime.now()
             return False
         else:
-            self.fight=0
-            self.fight_one = 0
+            if self.fight:
+                self.fight=0
+                self.fight_one = 0
+                print('unatack')
+                sleep(0.3)
+                if self.atack_or_looting():
+                   sleep(2) 
+                else:
+                    return False
+
 
         pixel2 = img2[447:472, 520:530].copy()
         diff = cv2.absdiff(img_looting, pixel2)
@@ -191,7 +199,6 @@ class Bot_API:
             maper = img2[554:660, 1086:1191]
             diff = cv2.absdiff(maper, self.map)
             similarity = cv2.mean(diff)[0]
-            print(similarity)
             if int(similarity) == 0:
                 self.map = maper
                 self.reverse_dviz()
@@ -207,7 +214,6 @@ class Bot_API:
             img2 = open_cv_image[:, :, ::-1].copy()
             diff = cv2.absdiff(img_move_zone, img2[146:150,400:535])
         similarity = cv2.mean(diff)[0]
-        print(similarity)
         if int(similarity) <= 3:
             pag.click(740, 560)
             self.move_position = self.move_position+4 if 0<self.move_position<=4 else self.move_position-4 
