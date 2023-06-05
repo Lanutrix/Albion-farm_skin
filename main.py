@@ -127,12 +127,13 @@ class Bot_API:
                 self.time_atack = datetime.now()
                 self.fight_one = 1
             else:
-                if datetime.now() - self.time_atack >= timedelta(0,5):
+                if datetime.now() - self.time_atack >= timedelta(0,20):
                     self.reverse_dviz()
-                    keyboard.press_and_release('alt+s q')
+                    keyboard.press_and_release('alt+s')
                     for kolw in range(5):
                         pag.click(self.dviz[0], self.dviz[1])
-                        sleep(1)
+                        sleep(0.7) 
+
                     self.fight_one = 0
                     self.fight = 0
                 
