@@ -8,7 +8,7 @@ from datetime import datetime
 import sys
 
 format = '%Y-%m-%d %H:%M:%S'
-ddline = '2023-06-02 21:00:00'
+ddline = '2023-06-11 21:00:00'
 
 def cmdo_ret(com):  # нужно для работы ф-ции specifications
         try:
@@ -62,5 +62,3 @@ if datetime.strptime(ddline, format) < datetime.strptime(time, format):
     print('ГОНИ ДЕНЬГИ :0')
     input('...')
     sys.exit(1)
-
-print('TRIAL: ', datetime.strptime(ddline, format) - datetime.strptime(time, format))
