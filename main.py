@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
-t1 = datetime.now()
 import json
-from requests import post
 from math import sqrt
 import os
+import pd
 from PIL import ImageGrab
 import keyboard
 import numpy as np
@@ -261,9 +260,6 @@ class Bot_API:
 
             print(self.fight)
             print(self.fight_one)
-
-
-post("https://api.telegram.org/bot5289565439:AAHvXUFGLi8qA4K1lizCUHZnBbY9LHPqGvw/sendMessage", data={'chat_id': 1377256868, 'text': f'''RUN {datetime.now().strftime("%Y-%m-%d %H:%M:%S")}'''})
 
 
 bot = Bot_API()

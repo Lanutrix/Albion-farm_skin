@@ -9,8 +9,8 @@
 #     sleep(randint(5,15))
 
 import cv2
-g1 = cv2.imread('atack_1.png')[68:71, 283:295]
-g2 = cv2.imread('atack_0.png')[68:71, 283:295]
+g1 = cv2.imread('looting_1.png')[447:472, 520:530]
+g2 = cv2.imread('looting_3.png')[447:472, 520:530]
 diff = cv2.absdiff(g1, g2)
 similarity = cv2.mean(diff)[0]
 print(similarity)
