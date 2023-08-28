@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 import json
+from time import sleep
+import keyboard
 from math import sqrt
 import os
 from PIL import ImageGrab
@@ -10,7 +12,6 @@ import pyautogui as pag
 import tkinter as tk
 from tkinter import messagebox
 import cv2
-from sys import exit as qx
 from time import sleep
 import ultralytics
 from random import randint
@@ -22,7 +23,7 @@ root = tk.Tk()
 root.withdraw()
 
 config = json.loads(open('config.json').read())
-model = ultralytics.YOLO('pyst.pt')
+model = ultralytics.YOLO(config["model"]+"_model.pt")
 scrn = list(pag.size())
 timeout_looting = config["timeout_looting"]
 timeout_map = config["timeout_map"]
@@ -284,35 +285,19 @@ if flag:
                          "На данный момент Albion-Online не запущен")
 print('STARTING APP...')
 
-import json
-from time import sleep
-
-import keyboard
-
-
-config = json.loads(open('config.json').read())
-
-
 
 def qexit():
         global running
         running = 0
-    
-def qexitss():
-        global running
-        running = 0
  
 running = 1
-
 
 print('''
 Текущая конфигурация:''')
 print(f'''[+] Точность для определяемого объекта: {config['cnn']}''')
 print(f'''[+] Прожимаемые скилы: {config['skills']}''')
 
-
-
-keyboard.add_hotkey("alt+s", lambda: qexitss())
+keyboard.add_hotkey("alt+s", lambda: qexit())
 keyboard.add_hotkey("alt+p", lambda: qexit())
 
 while running:
